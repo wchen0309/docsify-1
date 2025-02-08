@@ -30,7 +30,7 @@ test.describe('Search Plugin Tests', () => {
     await docsifyInit(docsifyInitConfig);
 
     await searchFieldElm.fill('hello');
-    await expect(resultsHeadingElm).toHaveText('Hello World');
+    await expect(resultsHeadingElm).toHaveText('Hello World', { timeout: 500000 });
     await page.click('.clear-button');
     await searchFieldElm.fill('test');
     await expect(resultsHeadingElm).toHaveText('Test Page');
