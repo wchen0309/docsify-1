@@ -137,6 +137,19 @@ function tlBuildWorksheet(wb,map,ts){
   row.getCell(12).value={formula:'IF(AND(J'+n+'<>"",K'+n+'<>""),K'+n+'-J'+n+'+1,"")'};
   row.getCell(15).value={formula:'IF(AND(K'+n+'<>"",N'+n+'<>"R&D:100%",TODAY()>K'+n+'),"超期","")'};
   row.getCell(18).value={formula:'IF(AND(Q'+n+'<>"",K'+n+'<>""),Q'+n+'-K'+n+',"")'};
+  const statusValue=tlExportStatus(t),statusCell=row.getCell(14);
+  const fill=(argb)=>({type:'pattern',pattern:'solid',fgColor:{argb}});
+  if(/R&D:100%/.test(statusValue)){statusCell.fill=fill('FFE2F0D9');statusCell.font={bold:true,color:{argb:'FF375623'}}}
+  else if(/TBD:0%|Hold/.test(statusValue)){statusCell.fill=fill('FFE7E6E6');statusCell.font={color:{argb:'FF595959'}}}
+  else if(/SIR:51-80%|R&D:81-99%|Reviewed:90%/.test(statusValue)){statusCell.fill=fill('FFFFF2CC');statusCell.font={bold:true,color:{argb:'FF7F6000'}}}
+  else if(/Ongoing:1-50%|SIR:1-50%/.test(statusValue)){statusCell.fill=fill('FFDBEAFE');statusCell.font={bold:true,color:{argb:'FF1D4ED8'}}}
+  const plannedStart=row.getCell(10).value,plannedEnd=row.getCell(11).value;
+  if(plannedStart instanceof Date&&plannedEnd instanceof Date){
+   const days=Math.floor((plannedEnd.getTime()-plannedStart.getTime())/86400000)+1;
+   if(days>14){row.getCell(12).fill=fill('FFFFF2CC');row.getCell(12).font={bold:true,color:{argb:'FF9C6500'}}}
+   const today=new Date();today.setHours(0,0,0,0);
+   if(plannedEnd<today&&!/R&D:100%/.test(statusValue)){row.getCell(15).fill=fill('FFF4CCCC');row.getCell(15).font={bold:true,color:{argb:'FF9C0006'}}}
+  }
   [10,11,16,17].forEach(c=>{row.getCell(c).numFmt='yyyy-mm-dd'});
   [1,2,3,4,5,6,7,8,9,13,14,15,19].forEach(c=>{row.getCell(c).alignment={vertical:'top',wrapText:true}});
   [12,18].forEach(c=>{row.getCell(c).numFmt='0';row.getCell(c).alignment={horizontal:'center',vertical:'center'}});
