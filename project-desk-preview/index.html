@@ -15,6 +15,7 @@
 </main></div><button class="fab" onclick="openWizard()">＋</button>
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
 const cats=['总','机械','硬件','下位机软件','软件'],m3cats=['机械','硬件','软件'],steps=['M1-任务需求审查','M2-技术可行性方案论证','M3-产品全周期设计与开发策划','M4-产品详细设计','Q3评审'];
 const initial={projects:[['p1','单管动态','研发',62],['p2','双脉冲控制台','研发',48],['p3','静态','研发',70],['p4','建模','研发',35],['p5','SST模块双脉冲','销售交付',40],['p6','SSP模块双脉冲','销售交付',20],['p7','alaska软件','售后',55]].map(x=>({id:x[0],name:x[1],type:x[2],progress:x[3],ipd:x[2]==='销售交付'})),tasks:[{id:'t1',projectId:'p3',category:'系统',name:'评审并确认单管动静态测试盒接口方案',desc:'确认系统边界与接口',owner:'王琛',planStart:'2026-10-20',planEnd:'2026-10-27',actualStart:'2026-10-21',status:'进行中',completion:60,risk:'中',urgency:'高',output:'接口方案'},{id:'t2',projectId:'p3',category:'机械',name:'确认机柜布局与接口排布方案',owner:'',planStart:'2026-10-24',planEnd:'2026-11-03',status:'未开始',completion:10},{id:'t3',projectId:'p3',category:'硬件',name:'确认母线电容规格与模块适配方案',planStart:'2026-10-18',planEnd:'2026-10-31',actualStart:'2026-10-18',status:'进行中',completion:45,risk:'中'},{id:'t4',projectId:'p3',category:'BSW',name:'开发跨导测量调压板控制方案',planStart:'2026-10-28',planEnd:'2026-11-12',status:'未开始',completion:0},{id:'t5',projectId:'p3',category:'ASW',name:'开发损耗查表数据自动生成功能',planStart:'2026-11-01',planEnd:'2026-11-18',status:'未开始',completion:0},{id:'t6',projectId:'p5',category:'M3',m3Category:'机械',name:'完成A0电容板治具设计',desc:'M3任务',owner:'李工',planStart:'2026-10-28',planEnd:'2026-11-06',status:'进行中',completion:35},{id:'t7',projectId:'p7',category:'售后',name:'修复alaska软件现场反馈问题',owner:'王琛',planStart:'2026-10-25',planEnd:'2026-10-30',status:'进行中',completion:50}],ipd:{p5:{'M1-任务需求审查':true,'M2-技术可行性方案论证':true,'M4-产品详细设计':false,'Q3评审':false},p6:{'M1-任务需求审查':true,'M2-技术可行性方案论证':false,'M4-产品详细设计':false,'Q3评审':false}}};
@@ -83,30 +84,114 @@ function tlExportStatus(t){
  if(s==='进行中'||s==='已逾期'){if(pct<=0&&s!=='已逾期')return 'TBD:0%';if(pct<=50)return 'Ongoing:1-50%';if(pct<=80)return 'SIR:51-80%';return 'Reviewed:90%'}
  return 'TBD:0%';
 }
-function tlBuildWorksheet(ts){
- const groupRow=Array(19).fill('');
- groupRow[0]='任务简介 Task Introduction';groupRow[5]='风险&紧急度\n Risk & Emergency';groupRow[7]='资源Resource';groupRow[9]='时间计划 Planed Time';groupRow[12]='评审&任务状态\n Review&Task status';groupRow[15]='时间监控 Monitor time';groupRow[17]='偏差 Discrepancy';groupRow[18]='复盘';
- const rows=[groupRow,tlHeaders.slice()];
- ts.forEach(t=>rows.push([t.wbs||'',t.name||'',t.desc||'',t.predecessor||'',t.output||'',t.risk||'',t.urgency||'',t.owner||'',t.supervisor||'',tlExcelSerial(t.planStart),tlExcelSerial(t.planEnd),'',t.reviewer||'',tlExportStatus(t),'',tlExcelSerial(t.actualStart),tlExcelSerial(t.actualEnd),'',t.delayReason||'']));
- const ws=XLSX.utils.aoa_to_sheet(rows);
- ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:4}},{s:{r:0,c:5},e:{r:0,c:6}},{s:{r:0,c:7},e:{r:0,c:8}},{s:{r:0,c:9},e:{r:0,c:11}},{s:{r:0,c:12},e:{r:0,c:14}},{s:{r:0,c:15},e:{r:0,c:16}}];
- ws['!cols']=[{wch:13},{wch:34},{wch:46},{wch:22},{wch:28},{wch:12},{wch:12},{wch:16},{wch:16},{wch:15},{wch:15},{wch:14},{wch:15},{wch:19},{wch:16},{wch:15},{wch:15},{wch:18},{wch:26}];
- ws['!rows']=[{hpt:36},{hpt:62}];
- for(let r=3;r<=rows.length;r++){
-  ws['L'+r]={t:'n',f:'K'+r+'-J'+r,z:'0'};
-  ws['O'+r]={t:'str',f:'IF(AND(K'+r+'<TODAY(),N'+r+'<>"Hold",N'+r+'<>"R&D:100%",N'+r+'<>""),"超期","")'};
-  ws['R'+r]={t:'n',f:'Q'+r+'-K'+r,z:'0'};
-  ['J','K','P','Q'].forEach(c=>{if(ws[c+r])ws[c+r].z='yyyy-mm-dd'});
+function tlExcelDate(v){
+ if(v===null||v===undefined||v==='')return null;
+ if(v instanceof Date&&!isNaN(v))return new Date(Date.UTC(v.getFullYear(),v.getMonth(),v.getDate()));
+ const x=String(v).trim();let m=x.match(/^(\d{4})[-/.年](\d{1,2})[-/.月](\d{1,2})/);
+ if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));
+ const d=new Date(x);return isNaN(d)?null:new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+}
+function tlBuildWorksheet(wb,map,ts){
+ const ws=wb.addWorksheet(map.sheet);
+ const groupRow=['任务简介 Task Introduction','','','','','风险&紧急度\n Risk & Emergency','','资源 Resource','','时间计划 Planed Time','','','评审&任务状态\n Review & Task status','','','时间监控 Monitor time','','偏差 Discrepancy','复盘'];
+ ws.addRow(groupRow);
+ ws.addRow(tlHeaders.slice());
+ ws.mergeCells('A1:E1');ws.mergeCells('F1:G1');ws.mergeCells('H1:I1');ws.mergeCells('J1:L1');ws.mergeCells('M1:O1');ws.mergeCells('P1:Q1');
+ const widths=[13,34,46,22,28,12,12,16,16,15,15,14,15,19,16,15,15,18,26];
+ ws.columns=widths.map(width=>({width}));
+ ws.getRow(1).height=34;ws.getRow(2).height=60;
+ ws.views=[{state:'frozen',ySplit:2}];
+ const maxRow=Math.max(200,ts.length+2);
+ ws.autoFilter={from:{row:2,column:1},to:{row:Math.max(2,ts.length+2),column:19}};
+ ts.forEach(t=>{
+  const row=ws.addRow([
+   t.wbs||'',t.name||'',t.desc||'',t.predecessor||'',t.output||'',t.risk||'',t.urgency||'',t.owner||'',t.supervisor||'',
+   tlExcelDate(t.planStart),tlExcelDate(t.planEnd),null,t.reviewer||'',tlExportStatus(t),null,
+   tlExcelDate(t.actualStart),tlExcelDate(t.actualEnd),null,t.delayReason||''
+  ]);
+  const n=row.number;
+  row.getCell(12).value={formula:'K'+n+'-J'+n};
+  row.getCell(15).value={formula:'IF(AND(K'+n+'<TODAY(),N'+n+'<>"Hold",N'+n+'<>"R&D:100%",N'+n+'<>""),"超期","")'};
+  row.getCell(18).value={formula:'Q'+n+'-K'+n};
+  [10,11,16,17].forEach(c=>{row.getCell(c).numFmt='yyyy-mm-dd'});
+  [1,2,3,4,5,6,7,8,9,13,14,15,19].forEach(c=>{row.getCell(c).alignment={vertical:'top',wrapText:true}});
+  [12,18].forEach(c=>{row.getCell(c).numFmt='0';row.getCell(c).alignment={horizontal:'center',vertical:'center'}});
+ });
+ // Data validation remains available even in blank rows, so users can keep adding TL tasks.
+ ws.dataValidations.add('F3:F'+maxRow,{
+  type:'list',allowBlank:true,formulae:['"低,中,高"'],showErrorMessage:true,errorStyle:'stop',
+  errorTitle:'风险等级无效',error:'请选择：低、中或高',showInputMessage:true,promptTitle:'风险等级',prompt:'从下拉列表选择低、中或高。'
+ });
+ ws.dataValidations.add('G3:G'+maxRow,{
+  type:'list',allowBlank:true,formulae:['"低,中,高"'],showErrorMessage:true,errorStyle:'stop',
+  errorTitle:'紧急程度无效',error:'请选择：低、中或高',showInputMessage:true,promptTitle:'紧急程度',prompt:'从下拉列表选择低、中或高。'
+ });
+ ws.dataValidations.add('N3:N'+maxRow,{
+  type:'list',allowBlank:true,formulae:['"TBD:0%,Ongoing:1-50%,SIR:51-80%,Reviewed:90%,R&D:100%,Hold"'],
+  showErrorMessage:true,errorStyle:'stop',errorTitle:'任务状态无效',
+  error:'请从任务状态下拉列表中选择。',showInputMessage:true,promptTitle:'任务状态',
+  prompt:'TBD、Ongoing、SIR、Reviewed、R&D 或 Hold。'
+ });
+ // Header styling and readable body formatting.
+ for(let c=1;c<=19;c++){
+  const h=ws.getRow(1).getCell(c);h.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF26334D'}};
+  h.font={bold:true,color:{argb:'FFFFFFFF'},size:10};
+  h.alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  const sub=ws.getRow(2).getCell(c);sub.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8EDF5'}};
+  sub.font={bold:true,color:{argb:'FF26334D'},size:10};
+  sub.alignment={horizontal:'center',vertical:'middle',wrapText:true};
+ }
+ for(let r=3;r<=ws.rowCount;r++){
+  const row=ws.getRow(r);row.height=36;
+  for(let c=1;c<=19;c++){
+   const cell=row.getCell(c);
+   cell.alignment=cell.alignment||{vertical:'top',wrapText:true};
+   cell.border={bottom:{style:'hair',color:{argb:'FFD7DEEA'}}};
+  }
+ }
+ if(ts.length){
+  ws.addConditionalFormatting({ref:'L3:L'+Math.max(3,ts.length+2),rules:[{
+   type:'cellIs',operator:'greaterThan',formulae:[14],
+   style:{fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFE699'}}}
+  }]});
+  ws.addConditionalFormatting({ref:'O3:O'+Math.max(3,ts.length+2),rules:[{
+   type:'containsText',text:'超期',
+   style:{font:{bold:true,color:{argb:'FF9C0006'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFC7CE'}}}
+  }]});
  }
  return ws;
 }
 function buildProjectTLWorkbook(projectId){
  const p=db.projects.find(x=>x.id===projectId);if(!p||p.type!=='研发')return null;
- const wb=XLSX.utils.book_new();
- tlSheetMap.forEach((map,ci)=>{const ts=db.tasks.filter(t=>t.projectId===projectId&&canonicalCategory(t.category)===map.category).slice().sort((a,b)=>String(a.wbs||'').localeCompare(String(b.wbs||''),undefined,{numeric:true})).map((t,i)=>Object.assign({},t,{wbs:t.wbs||('1.'+(ci+1)+'.'+(i+1))}));XLSX.utils.book_append_sheet(wb,tlBuildWorksheet(ts),map.sheet)});
- wb.Props={Title:'TL - '+p.name,Subject:'Project Desk R&D TL export',Author:'Project Desk'};
- wb.Workbook=wb.Workbook||{};wb.Workbook.CalcPr={calcMode:'auto',fullCalcOnLoad:true,forceFullCalc:true};
+ if(!window.ExcelJS)return null;
+ const wb=new ExcelJS.Workbook();
+ wb.creator='Project Desk';wb.subject='研发 TL';wb.title='TL - '+p.name;
+ wb.calcProperties={calcMode:'auto',fullCalcOnLoad:true,forceFullCalc:true};
+ tlSheetMap.forEach((map,ci)=>{
+  const ts=db.tasks.filter(t=>t.projectId===projectId&&canonicalCategory(t.category)===map.category)
+   .slice().sort((a,b)=>String(a.wbs||'').localeCompare(String(b.wbs||''),undefined,{numeric:true}))
+   .map((t,i)=>Object.assign({},t,{wbs:t.wbs||('1.'+(ci+1)+'.'+(i+1))}));
+  tlBuildWorksheet(wb,map,ts);
+ });
  return {wb,p};
+}
+async function downloadExcelJSWorkbook(built,filename){
+ const buffer=await built.wb.xlsx.writeBuffer();
+ const blob=new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+async function exportTL(projectId){
+ if(!window.ExcelJS){alert('Excel 导出组件未加载。请检查网络后刷新页面再试。');return}
+ const built=buildProjectTLWorkbook(projectId);if(!built){alert('只有研发项目可以导出 TL');return}
+ const safe=built.p.name.replace(/[\\/:*?"<>|]/g,'_');
+ try{await downloadExcelJSWorkbook(built,'TL_'+safe+'.xlsx')}catch(e){console.error(e);alert('TL 导出失败：'+(e.message||e))}
+}
+async function exportProjectFeishuXLSX(projectId){
+ if(!window.ExcelJS){alert('Excel 导出组件未加载。请检查网络后刷新页面再试。');return}
+ const built=buildProjectTLWorkbook(projectId);if(!built){alert('只有研发项目可以导出 TL');return}
+ const safe=built.p.name.replace(/[\\/:*?"<>|]/g,'_');
+ try{await downloadExcelJSWorkbook(built,'飞书表格_TL_'+safe+'.xlsx')}catch(e){console.error(e);alert('飞书 Excel 导出失败：'+(e.message||e))}
 }
 function tlNorm(v){return String(v??'').trim().toLowerCase().replace(/[\s_\-（）():：·]+/g,'')}
 function tlFindCol(headers,aliases){const hs=headers.map(tlNorm),aa=aliases.map(tlNorm);for(const a of aa){const exact=hs.findIndex(h=>h===a);if(exact>=0)return exact}return hs.findIndex(h=>aa.some(a=>h.includes(a)))}
