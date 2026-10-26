@@ -80,7 +80,7 @@ function tlExportStatus(t){
  const valid=['TBD:0%','Ongoing:1-50%','SIR:51-80%','Reviewed:90%','R&D:100%','Hold'];
  if(valid.includes(s))return s;
  if(s==='已完成'||pct>=100)return 'R&D:100%';
- if(s==='进行中'||s==='已逾期'){if(pct<=50)return 'Ongoing:1-50%';if(pct<=80)return 'SIR:51-80%';return 'Reviewed:90%'}
+ if(s==='进行中'||s==='已逾期'){if(pct<=0&&s!=='已逾期')return 'TBD:0%';if(pct<=50)return 'Ongoing:1-50%';if(pct<=80)return 'SIR:51-80%';return 'Reviewed:90%'}
  return 'TBD:0%';
 }
 function tlBuildWorksheet(ts){
