@@ -175,24 +175,34 @@ function buildProjectTLWorkbook(projectId){
  });
  return {wb,p};
 }
+function showExportMessage(message,isError=false){
+ let el=document.getElementById('exportFeedback');
+ if(!el){el=document.createElement('div');el.id='exportFeedback';el.style.cssText='position:fixed;z-index:99999;right:16px;bottom:16px;max-width:min(520px,calc(100vw - 32px));padding:12px 16px;border-radius:10px;box-shadow:0 4px 22px #0002;font:14px/1.5 system-ui,sans-serif;white-space:pre-wrap';document.body.appendChild(el)}
+ el.textContent=message;el.style.background=isError?'#fff0f0':'#edf8f0';el.style.color=isError?'#9b1c1c':'#176b35';el.style.border=isError?'1px solid #f0b6b6':'1px solid #b6e1c2';el.style.display='block';
+ clearTimeout(window.__exportFeedbackTimer);window.__exportFeedbackTimer=setTimeout(()=>{el.style.display='none'},8000);
+}
 async function downloadExcelJSWorkbook(built,filename){
  const buffer=await built.wb.xlsx.writeBuffer();
  const blob=new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;
- document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
 }
-async function exportTL(projectId){
- if(!window.ExcelJS){alert('Excel 导出组件未加载。请检查网络后刷新页面再试。');return}
- const built=buildProjectTLWorkbook(projectId);if(!built){alert('只有研发项目可以导出 TL');return}
- const safe=built.p.name.replace(/[\\/:*?"<>|]/g,'_');
- try{await downloadExcelJSWorkbook(built,'TL_'+safe+'.xlsx')}catch(e){console.error(e);alert('TL 导出失败：'+(e.message||e))}
+async function runTLExport(projectId,filenamePrefix){
+ try{
+  if(!window.ExcelJS)throw new Error('Excel 导出组件 ExcelJS 没有加载。可能是网络/CDN 被拦截，请刷新或换网络后重试。');
+  showExportMessage('正在生成 TL 工作簿，请稍候…');
+  const built=buildProjectTLWorkbook(projectId);
+  if(!built)throw new Error('未找到研发项目，请返回项目列表后重新进入该项目。');
+  const safe=built.p.name.replace(/[\\/:*?"<>|]/g,'_');
+  await downloadExcelJSWorkbook(built,filenamePrefix+safe+'.xlsx');
+  showExportMessage('已生成 '+filenamePrefix+safe+'.xlsx。如果没有自动下载，请检查浏览器下载栏或下载权限。');
+ }catch(e){
+  console.error('TL export failed:',e);
+  showExportMessage('导出失败：'+(e&&e.message?e.message:String(e)),true);
+ }
 }
-async function exportProjectFeishuXLSX(projectId){
- if(!window.ExcelJS){alert('Excel 导出组件未加载。请检查网络后刷新页面再试。');return}
- const built=buildProjectTLWorkbook(projectId);if(!built){alert('只有研发项目可以导出 TL');return}
- const safe=built.p.name.replace(/[\\/:*?"<>|]/g,'_');
- try{await downloadExcelJSWorkbook(built,'飞书表格_TL_'+safe+'.xlsx')}catch(e){console.error(e);alert('飞书 Excel 导出失败：'+(e.message||e))}
-}
+async function exportTL(projectId){return runTLExport(projectId,'TL_')}
+async function exportProjectFeishuXLSX(projectId){return runTLExport(projectId,'飞书表格_TL_')}
 function tlNorm(v){return String(v??'').trim().toLowerCase().replace(/[\s_\-（）():：·]+/g,'')}
 function tlFindCol(headers,aliases){const hs=headers.map(tlNorm),aa=aliases.map(tlNorm);for(const a of aa){const exact=hs.findIndex(h=>h===a);if(exact>=0)return exact}return hs.findIndex(h=>aa.some(a=>h.includes(a)))}
 function tlCell(row,i){return i>=0?(row[i]??''):''}
