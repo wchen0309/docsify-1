@@ -134,9 +134,9 @@ function tlBuildWorksheet(wb,map,ts){
    tlExcelDate(t.actualStart),tlExcelDate(t.actualEnd),null,t.delayReason||''
   ]);
   const n=row.number;
-  row.getCell(12).value={formula:'K'+n+'-J'+n};
-  row.getCell(15).value={formula:'IF(AND(K'+n+'<TODAY(),N'+n+'<>"Hold",N'+n+'<>"R&D:100%",N'+n+'<>""),"超期","")'};
-  row.getCell(18).value={formula:'Q'+n+'-K'+n};
+  row.getCell(12).value={formula:'IF(AND(J'+n+'<>"",K'+n+'<>""),K'+n+'-J'+n+'+1,"")'};
+  row.getCell(15).value={formula:'IF(AND(K'+n+'<>"",N'+n+'<>"R&D:100%",TODAY()>K'+n+'),"超期","")'};
+  row.getCell(18).value={formula:'IF(AND(Q'+n+'<>"",K'+n+'<>""),Q'+n+'-K'+n+',"")'};
   [10,11,16,17].forEach(c=>{row.getCell(c).numFmt='yyyy-mm-dd'});
   [1,2,3,4,5,6,7,8,9,13,14,15,19].forEach(c=>{row.getCell(c).alignment={vertical:'top',wrapText:true}});
   [12,18].forEach(c=>{row.getCell(c).numFmt='0';row.getCell(c).alignment={horizontal:'center',vertical:'center'}});
@@ -158,11 +158,11 @@ function tlBuildWorksheet(wb,map,ts){
  });
  // Header styling and readable body formatting.
  for(let c=1;c<=19;c++){
-  const h=ws.getRow(1).getCell(c);h.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF26334D'}};
+  const h=ws.getRow(1).getCell(c);h.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF4472C4'}};
   h.font={bold:true,color:{argb:'FFFFFFFF'},size:10};
   h.alignment={horizontal:'center',vertical:'middle',wrapText:true};
-  const sub=ws.getRow(2).getCell(c);sub.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8EDF5'}};
-  sub.font={bold:true,color:{argb:'FF26334D'},size:10};
+  const sub=ws.getRow(2).getCell(c);sub.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD9EAF7'}};
+  sub.font={bold:true,color:{argb:'FF203864'},size:10};
   sub.alignment={horizontal:'center',vertical:'middle',wrapText:true};
  }
  for(let r=3;r<=ws.rowCount;r++){
@@ -174,14 +174,21 @@ function tlBuildWorksheet(wb,map,ts){
   }
  }
  if(ts.length){
-  ws.addConditionalFormatting({ref:'L3:L'+Math.max(3,ts.length+2),rules:[{
+  const last=Math.max(3,ts.length+2);
+  ws.addConditionalFormatting({ref:'L3:L'+last,rules:[{
    type:'cellIs',operator:'greaterThan',formulae:[14],
-   style:{fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFE699'}}}
+   style:{font:{bold:true,color:{argb:'FF9C6500'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFF2CC'}}}
   }]});
-  ws.addConditionalFormatting({ref:'O3:O'+Math.max(3,ts.length+2),rules:[{
-   type:'containsText',text:'超期',
-   style:{font:{bold:true,color:{argb:'FF9C0006'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFC7CE'}}}
+  ws.addConditionalFormatting({ref:'O3:O'+last,rules:[{
+   type:'expression',formulae:['O3="超期"'],
+   style:{font:{bold:true,color:{argb:'FF9C0006'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFF4CCCC'}}}
   }]});
+  ws.addConditionalFormatting({ref:'N3:N'+last,rules:[
+   {type:'expression',formulae:['N3="R&D:100%"'],style:{font:{bold:true,color:{argb:'FF375623'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFE2F0D9'}}}},
+   {type:'expression',formulae:['OR(N3="SIR:51-80%",N3="R&D:81-99%",N3="Reviewed:90%")'],style:{font:{bold:true,color:{argb:'FF7F6000'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFF2CC'}}}},
+   {type:'expression',formulae:['OR(N3="TBD:0%",N3="Hold")'],style:{font:{color:{argb:'FF595959'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFE7E6E6'}}}},
+   {type:'expression',formulae:['OR(N3="Ongoing:1-50%",N3="SIR:1-50%")'],style:{font:{bold:true,color:{argb:'FF1D4ED8'}},fill:{type:'pattern',pattern:'solid',fgColor:{argb:'FFDBEAFE'}}}}
+  ]});
  }
  return ws;
 }
