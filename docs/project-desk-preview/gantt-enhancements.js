@@ -29,7 +29,6 @@
     if(typeof renderDetail==='function') renderDetail();
   };
 
-  // Future imports: ignore garbage/formulas in date cells instead of storing values such as "c".
   window.tlDate=function(v){
     if(v===null||v===undefined||v==='') return '';
     if(v instanceof Date&&!isNaN(v)) return v.toISOString().slice(0,10);
@@ -55,13 +54,14 @@
     .gantt-toolbar button.active{background:#252b40;color:#fff;box-shadow:none}
     .gantt-zoom-pct{font-size:12px;color:var(--muted);min-width:42px;text-align:center}
     .gantt-scroll{overflow:auto;border:1px solid var(--line);border-radius:13px;background:#fff;max-height:72vh}
-    .gantt-grid{min-width:max-content;font-size:12px}
+    .gantt-grid{--cat-w:96px;--task-w:330px;--owner-w:110px;min-width:max-content;font-size:12px}
     .gantt-row{display:grid;align-items:stretch;border-bottom:1px solid var(--line);min-height:52px}
     .gantt-head{position:sticky;top:0;z-index:6;background:#f8f9fb;min-height:66px;font-weight:700}
-    .gantt-cat,.gantt-task{position:sticky;background:#fff;border-right:1px solid var(--line);padding:10px;display:flex;align-items:center;z-index:3}
-    .gantt-head .gantt-cat,.gantt-head .gantt-task{background:#f8f9fb;z-index:8}
-    .gantt-cat{left:0;width:96px;font-weight:700;color:var(--accent)}
-    .gantt-task{left:96px;width:330px;display:block;z-index:4}
+    .gantt-cat,.gantt-task,.gantt-owner{position:sticky;background:#fff;border-right:1px solid var(--line);padding:10px;display:flex;align-items:center;z-index:3}
+    .gantt-head .gantt-cat,.gantt-head .gantt-task,.gantt-head .gantt-owner{background:#f8f9fb;z-index:8}
+    .gantt-cat{left:0;width:var(--cat-w);font-weight:700;color:var(--accent)}
+    .gantt-task{left:var(--cat-w);width:var(--task-w);display:block;z-index:4}
+    .gantt-owner{left:calc(var(--cat-w) + var(--task-w));width:var(--owner-w);z-index:5;color:#475467}
     .gantt-task b{display:block;font-size:13px;line-height:1.35;margin-bottom:3px;color:var(--ink)}
     .gantt-task small{display:block;color:var(--muted);line-height:1.3;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .gantt-time{position:relative;background:#fff;overflow:hidden}
@@ -76,7 +76,7 @@
     .gantt-bar span{position:absolute;inset:0;display:flex;align-items:center;padding:0 7px;font-size:11px;color:#20263a;white-space:nowrap}
     .gantt-empty{position:absolute;left:10px;top:17px;color:var(--muted)}
     .gantt-today{position:absolute;top:0;bottom:0;width:2px;background:#ef6a5b;opacity:.65;z-index:2}
-    @media(max-width:760px){.gantt-scroll{max-height:68vh}.gantt-cat{width:72px;padding:8px}.gantt-task{left:72px;width:230px;padding:8px}.gantt-task small{max-width:205px}.gantt-row{min-height:58px}.gantt-toolbar{position:sticky;left:0}}
+    @media(max-width:760px){.gantt-scroll{max-height:68vh}.gantt-grid{--cat-w:72px;--task-w:230px;--owner-w:88px}.gantt-cat,.gantt-task,.gantt-owner{padding:8px}.gantt-task small{max-width:205px}.gantt-row{min-height:58px}.gantt-toolbar{position:sticky;left:0}}
   `;
   document.head.appendChild(style);
 
@@ -88,14 +88,19 @@
       '<span style="width:6px"></span><button onclick="adjustGanttZoom(-0.15)" title="缩小">−</button><span class="gantt-zoom-pct">'+pct+'%</span><button onclick="adjustGanttZoom(0.15)" title="放大">＋</button></div>';
   }
 
+  function gridCols(timeWidth){
+    return 'var(--cat-w) var(--task-w) var(--owner-w) '+timeWidth+'px';
+  }
+
   window.gantt=function(ts){
     const rows=(ts||[]).slice();
     const toolbar=zoomToolbar();
     const scheduled=rows.map(t=>({t,start:parseDate(t.planStart),end:parseDate(t.planEnd)})).filter(x=>x.start&&x.end&&x.end>=x.start);
     if(!scheduled.length){
+      const cols=gridCols(520);
       return toolbar+'<div class="gantt-scroll"><div class="gantt-grid">'+
-        '<div class="gantt-row gantt-head" style="grid-template-columns:96px 330px 520px"><div class="gantt-cat">类别</div><div class="gantt-task">任务描述</div><div class="gantt-time"><div class="gantt-empty">暂无有效计划日期</div></div></div>'+
-        rows.map(t=>'<div class="gantt-row" style="grid-template-columns:96px 330px 520px" onclick="editTask(\''+esc2(t.id)+'\')"><div class="gantt-cat">'+esc2(categoryOf(t))+'</div><div class="gantt-task"><b>'+esc2(t.name||'未命名任务')+'</b><small>'+esc2(t.desc||'')+'</small></div><div class="gantt-time"><div class="gantt-empty">未排期</div></div></div>').join('')+
+        '<div class="gantt-row gantt-head" style="grid-template-columns:'+cols+'"><div class="gantt-cat">类别</div><div class="gantt-task">任务描述</div><div class="gantt-owner">负责人</div><div class="gantt-time"><div class="gantt-empty">暂无有效计划日期</div></div></div>'+
+        rows.map(t=>'<div class="gantt-row" style="grid-template-columns:'+cols+'" onclick="editTask(\''+esc2(t.id)+'\')"><div class="gantt-cat">'+esc2(categoryOf(t))+'</div><div class="gantt-task"><b>'+esc2(t.name||'未命名任务')+'</b><small>'+esc2(t.desc||'')+'</small></div><div class="gantt-owner">'+esc2(t.owner||'未分配')+'</div><div class="gantt-time"><div class="gantt-empty">未排期</div></div></div>').join('')+
         '</div></div>';
     }
 
@@ -108,8 +113,7 @@
     const baseScale=mode==='day'?28:mode==='week'?12:4;
     const scale=baseScale*factor;
     const timeWidth=Math.max(620,totalDays*scale);
-    const leftCat=96,leftTask=330;
-    const gridCols=leftCat+'px '+leftTask+'px '+timeWidth+'px';
+    const cols=gridCols(timeWidth);
 
     let tickHtml='',gridHtml='';
     if(mode==='month'){
@@ -151,7 +155,7 @@
     const todayOffset=today>=min&&today<=max?dayDiff(min,today)*scale:null;
     const todayHtml=todayOffset===null?'':'<i class="gantt-today" style="left:'+todayOffset+'px" title="今天"></i>';
 
-    const head='<div class="gantt-row gantt-head" style="grid-template-columns:'+gridCols+'"><div class="gantt-cat">类别</div><div class="gantt-task">任务描述</div><div class="gantt-time"><div class="gantt-months">'+monthHtml+'</div><div class="gantt-ticks">'+tickHtml+'</div></div></div>';
+    const head='<div class="gantt-row gantt-head" style="grid-template-columns:'+cols+'"><div class="gantt-cat">类别</div><div class="gantt-task">任务描述</div><div class="gantt-owner">负责人</div><div class="gantt-time"><div class="gantt-months">'+monthHtml+'</div><div class="gantt-ticks">'+tickHtml+'</div></div></div>';
 
     const body=rows.map(t=>{
       const start=parseDate(t.planStart),end=parseDate(t.planEnd);
@@ -165,7 +169,7 @@
         const bad=(t.planStart||t.planEnd)?'日期待修正':'未排期';
         timeline+='<div class="gantt-empty">'+bad+'</div>';
       }
-      return '<div class="gantt-row" style="grid-template-columns:'+gridCols+'" onclick="editTask(\''+esc2(t.id)+'\')"><div class="gantt-cat">'+esc2(categoryOf(t))+'</div><div class="gantt-task"><b>'+esc2(t.name||'未命名任务')+'</b><small>'+esc2(t.desc||'')+'</small></div><div class="gantt-time">'+timeline+'</div></div>';
+      return '<div class="gantt-row" style="grid-template-columns:'+cols+'" onclick="editTask(\''+esc2(t.id)+'\')"><div class="gantt-cat">'+esc2(categoryOf(t))+'</div><div class="gantt-task"><b>'+esc2(t.name||'未命名任务')+'</b><small>'+esc2(t.desc||'')+'</small></div><div class="gantt-owner">'+esc2(t.owner||'未分配')+'</div><div class="gantt-time">'+timeline+'</div></div>';
     }).join('');
 
     return toolbar+'<div class="gantt-scroll"><div class="gantt-grid">'+head+body+'</div></div>';
