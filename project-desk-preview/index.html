@@ -61,7 +61,7 @@
  .gantt-filters label{flex:1;min-width:130px}
 }
 </style></head><body>
-<header class="top"><div class="brand">Project Desk<small>项目工作台 · 研发 / IPD / 售后</small></div><div class="top-actions"><button class="soft" onclick="syncOctoberTL()">同步10月以来TL</button><button class="primary" onclick="openWizard()">＋ 快速填报</button></div></header>
+<header class="top"><div class="brand">Project Desk<small>项目工作台 · 研发 / IPD / 售后 · v20261124.2</small></div><div class="top-actions"><button class="soft" onclick="syncOctoberTL()">同步10月以来TL</button><button class="primary" onclick="openWizard()">＋ 快速填报</button></div></header>
 <div class="layout"><aside><nav class="nav"><button data-id="projects" class="active" onclick="go('projects')">项目</button><button data-id="people" onclick="go('people')">责任人</button><button data-id="quick" onclick="go('quick');startWizard()">快速填报</button><button data-id="tasks" onclick="go('tasks')">多维表</button><button data-id="overview" onclick="go('overview')">总览</button></nav></aside>
 <main>
 <section class="page active" id="projects"><div class="heading"><div><h1>项目总表</h1><p>先选项目，再进入任务。手机与电脑使用同一套页面。</p></div><button onclick="newProject()">＋ 新建项目</button></div><div id="pf" class="filters"></div><div id="projectCards" class="cards"></div></section>
