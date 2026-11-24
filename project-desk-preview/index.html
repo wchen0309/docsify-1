@@ -16,8 +16,11 @@
 .status-hold{background:#e7e6e6;color:#595959;border-color:#d1d5db}
 .status-overdue{background:#f4cccc;color:#9c0006;border-color:#ea9999}
 .status-todo{background:#f1f5f9;color:#64748b;border-color:#e2e8f0}
+
+.top-actions{display:flex;align-items:center;gap:8px}
+@media(max-width:760px){.top-actions{gap:6px}.top-actions button{padding:8px 9px;font-size:12px}}
 </style></head><body>
-<header class="top"><div class="brand">Project Desk<small>项目工作台 · 研发 / IPD / 售后</small></div><button class="primary" onclick="openWizard()">＋ 快速填报</button></header>
+<header class="top"><div class="brand">Project Desk<small>项目工作台 · 研发 / IPD / 售后</small></div><div class="top-actions"><button class="soft" onclick="syncOctoberTL()">同步10月以来TL</button><button class="primary" onclick="openWizard()">＋ 快速填报</button></div></header>
 <div class="layout"><aside><nav class="nav"><button data-id="projects" class="active" onclick="go('projects')">项目</button><button data-id="quick" onclick="go('quick');startWizard()">快速填报</button><button data-id="tasks" onclick="go('tasks')">多维表</button><button data-id="overview" onclick="go('overview')">总览</button></nav></aside>
 <main>
 <section class="page active" id="projects"><div class="heading"><div><h1>项目总表</h1><p>先选项目，再进入任务。手机与电脑使用同一套页面。</p></div><button onclick="newProject()">＋ 新建项目</button></div><div id="pf" class="filters"></div><div id="projectCards" class="cards"></div></section>
@@ -30,10 +33,10 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
-const cats=['总','机械','硬件','下位机软件','软件'],m3cats=['机械','硬件','软件'],steps=['M1-任务需求审查','M2-技术可行性方案论证','M3-产品全周期设计与开发策划','M4-产品详细设计','Q3评审'];
+const cats=['总','机械','硬件','BSW','ASW'],m3cats=['机械','硬件','软件'],steps=['M1-任务需求审查','M2-技术可行性方案论证','M3-产品全周期设计与开发策划','M4-产品详细设计','Q3评审'];
 const initial={projects:[['p1','单管动态','研发',62],['p2','双脉冲控制台','研发',48],['p3','静态','研发',70],['p4','建模','研发',35],['p5','SST模块双脉冲','销售交付',40],['p6','SSP模块双脉冲','销售交付',20],['p7','alaska软件','售后',55]].map(x=>({id:x[0],name:x[1],type:x[2],progress:x[3],ipd:x[2]==='销售交付'})),tasks:[{id:'t1',projectId:'p3',category:'系统',name:'评审并确认单管动静态测试盒接口方案',desc:'确认系统边界与接口',owner:'王琛',planStart:'2026-10-20',planEnd:'2026-10-27',actualStart:'2026-10-21',status:'进行中',completion:60,risk:'中',urgency:'高',output:'接口方案'},{id:'t2',projectId:'p3',category:'机械',name:'确认机柜布局与接口排布方案',owner:'',planStart:'2026-10-24',planEnd:'2026-11-03',status:'未开始',completion:10},{id:'t3',projectId:'p3',category:'硬件',name:'确认母线电容规格与模块适配方案',planStart:'2026-10-18',planEnd:'2026-10-31',actualStart:'2026-10-18',status:'进行中',completion:45,risk:'中'},{id:'t4',projectId:'p3',category:'BSW',name:'开发跨导测量调压板控制方案',planStart:'2026-10-28',planEnd:'2026-11-12',status:'未开始',completion:0},{id:'t5',projectId:'p3',category:'ASW',name:'开发损耗查表数据自动生成功能',planStart:'2026-11-01',planEnd:'2026-11-18',status:'未开始',completion:0},{id:'t6',projectId:'p5',category:'M3',m3Category:'机械',name:'完成A0电容板治具设计',desc:'M3任务',owner:'李工',planStart:'2026-10-28',planEnd:'2026-11-06',status:'进行中',completion:35},{id:'t7',projectId:'p7',category:'售后',name:'修复alaska软件现场反馈问题',owner:'王琛',planStart:'2026-10-25',planEnd:'2026-10-30',status:'进行中',completion:50}],ipd:{p5:{'M1-任务需求审查':true,'M2-技术可行性方案论证':true,'M4-产品详细设计':false,'Q3评审':false},p6:{'M1-任务需求审查':true,'M2-技术可行性方案论证':false,'M4-产品详细设计':false,'Q3评审':false}}};
 let db;try{db=JSON.parse(localStorage.getItem('projectDeskData'))||initial}catch(e){db=initial}
-function canonicalCategory(v){const x=String(v||'').trim();if(['系统','总','System'].includes(x))return '总';if(['BSW','下位机软件','底层软件'].includes(x))return '下位机软件';if(['ASW','软件','应用软件'].includes(x))return '软件';return x}
+function canonicalCategory(v){const x=String(v||'').trim();if(['系统','总','System'].includes(x))return '总';if(['BSW','下位机软件','底层软件'].includes(x))return 'BSW';if(['ASW','软件','应用软件','TL-Modeling','TL-同元'].includes(x))return 'ASW';return x}
 let _categoryMigrated=false;(db.tasks||[]).forEach(t=>{const c=canonicalCategory(t.category);if(c!==t.category){t.category=c;_categoryMigrated=true}});if(_categoryMigrated){try{localStorage.setItem('projectDeskData',JSON.stringify(db))}catch(e){}}
 let filter='全部',taskfilter='全部',pid=null,view='table',wiz={step:0,data:{}},pendingTLImport=null;
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),attr=esc;
@@ -86,8 +89,10 @@ const tlSheetMap=[
  {sheet:'TL-系统',aliases:['TL-系统','TL系统'],category:'总'},
  {sheet:'TL-机械',aliases:['TL-机械','TL机械'],category:'机械'},
  {sheet:'TL-硬件',aliases:['TL-硬件','TL硬件'],category:'硬件'},
- {sheet:'TL-BSW',aliases:['TL-BSW','TLBSW','BSW','下位机软件'],category:'下位机软件'},
- {sheet:'TL-ASW',aliases:['TL-ASW','TLASW','ASW','软件'],category:'软件'}
+ {sheet:'TL-BSW',aliases:['TL-BSW','TLBSW','BSW','下位机软件'],category:'BSW'},
+ {sheet:'TL-ASW',aliases:['TL-ASW','TLASW','ASW','软件'],category:'ASW'},
+ {sheet:'TL-Modeling',aliases:['TL-Modeling','TLModeling'],category:'ASW'},
+ {sheet:'TL-同元',aliases:['TL-同元','TL同元'],category:'ASW'}
 ];
 const tlHeaders=[
 '序号\n NO','任务名称\n Task Name','任务描述(遵循smart原则)\n Task Description\n (Follow the SMART principle)','前置任务项\n Pre-step','输出物\n Deliverables List','风险项等级\n Risk Level','紧急程度\n Emergency Level','责任人\n Task Owner','指导人\n （可选）\n Supervisor\n (Optional)','计划开始时间\n Planed Start','计划结束时间\n Planed End','PM查看（隐藏列）颗粒度＞14天标黄\n （自带公式）','任务评审人\n Reviewer','任务状态\n Status','超期提醒\n （未按照计划时间完成任务）\n (自带公式）','实际开始时间\n Actual Start Time','实际结束时间\n Actual End Time','完成时间差异（Day）\n （自带公式）','超期原因\n (delay reason)'
@@ -273,6 +278,91 @@ function openFeishuExport(){$('#sheet').innerHTML='<div class="panelhead"><h2>�
 function exportFeishuProjects(){let rows=[['项目编号','项目名称','项目类型','项目进度(%)','是否IPD']];db.projects.forEach(p=>rows.push([p.id,p.name,p.type,p.progress||0,p.ipd?'是':'否']));downloadCSVFile(rows,'飞书导入_项目表.csv')}
 function exportFeishuTasks(){let rows=[['任务编号','项目编号','项目名称','任务大类','M3类别','任务名称','任务描述','责任人','计划开始','计划结束','实际开始','实际结束','状态','完成度(%)','风险','紧急程度','输出物']];db.tasks.forEach(t=>{let p=db.projects.find(p=>p.id===t.projectId)||{};rows.push([t.id,t.projectId,p.name||'',t.category||'',t.m3Category||'',t.name||'',t.desc||'',t.owner||'',t.planStart||'',t.planEnd||'',t.actualStart||'',t.actualEnd||'',t.status||'未开始',t.completion||0,t.risk||'',t.urgency||'',t.output||''])});downloadCSVFile(rows,'飞书导入_任务表.csv')}
 function exportFeishuIPD(){let rows=[['项目编号','项目名称','IPD阶段','是否完成']];db.projects.filter(p=>p.ipd||p.type==='销售交付').forEach(p=>steps.forEach(step=>rows.push([p.id,p.name,step,db.ipd?.[p.id]?.[step]?'是':'否'])));downloadCSVFile(rows,'飞书导入_IPD阶段表.csv')}
+
+
+let pendingOctoberTLSeed=null;
+async function loadOctoberTLSeed(){
+ const res=await fetch('./data/tl-oct-2026.deflate.b64?v=20261124',{cache:'no-store'});
+ if(!res.ok)throw new Error('网站上的10月TL数据包读取失败（HTTP '+res.status+'）');
+ const b64=(await res.text()).replace(/\s/g,'');
+ const binary=atob(b64),bytes=new Uint8Array(binary.length);
+ for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+ if(!window.DecompressionStream)throw new Error('当前浏览器不支持数据解压，请升级浏览器后重试');
+ const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'));
+ return JSON.parse(await new Response(stream).text());
+}
+function findOctoberProject(def){
+ let p=db.projects.find(x=>x.id===def.preferredId&&x.type==='研发');
+ const norm=v=>String(v||'').trim().toLowerCase().replace(/[\s_\-·（）()]/g,'');
+ if(!p){
+  const aliases=[def.name].concat(def.aliases||[]).map(norm);
+  p=db.projects.find(x=>x.type==='研发'&&aliases.includes(norm(x.name)));
+ }
+ if(!p&&def.key==='integrated_device'){
+  p=db.projects.find(x=>x.type==='研发'&&/单管/.test(x.name||'')&&/动静态/.test(x.name||''));
+ }
+ if(!p){
+  p={id:def.preferredId||('tlproj_'+Date.now()+'_'+Math.random().toString(36).slice(2,7)),name:def.name,type:'研发',progress:0,ipd:false};
+  db.projects.push(p);
+ }
+ return p;
+}
+async function syncOctoberTL(){
+ try{
+  const seed=await loadOctoberTLSeed();
+  pendingOctoberTLSeed=seed;
+  const summary=seed.projects.map(def=>{
+   const n=seed.tasks.filter(t=>t.projectKey===def.key).length;
+   return '<div class="step"><strong>'+n+'</strong><div><b>'+esc(def.name)+'</b><small>'+n+' 条任务</small></div></div>';
+  }).join('');
+  $('#sheet').innerHTML='<div class="panelhead"><h2>同步10月以来 TL</h2><button onclick="closeModal()">取消</button></div>'+
+   '<p>数据范围：2026年10月1日起。已忽略隐藏行，仅整理有明确日期记录的任务。</p>'+
+   '<div class="steps">'+summary+'</div>'+
+   '<p class="muted" style="margin-top:12px">共 '+seed.tasks.length+' 条任务。按项目和WBS匹配：已有任务更新非空字段，新任务追加；不会删除现有任务。类别按TL命名显示为总、机械、硬件、BSW、ASW。</p>'+
+   '<p class="muted">提示：当前网站的数据保存在当前浏览器。此操作会写入当前设备的项目数据，不会自动同步到另一台设备。</p>'+
+   '<div class="savebar"><button onclick="closeModal()">取消</button><button class="primary" onclick="applyOctoberTLSeed()">确认导入 '+seed.tasks.length+' 条</button></div>';
+  $('#modal').classList.add('on');
+ }catch(e){console.error(e);alert('读取10月以来TL失败：'+(e&&e.message?e.message:e))}
+}
+function applyOctoberTLSeed(){
+ const seed=pendingOctoberTLSeed;if(!seed)return;
+ let added=0,updated=0,createdProjects=0;
+ const projectByKey={};
+ seed.projects.forEach(def=>{
+  const before=db.projects.length;
+  const p=findOctoberProject(def);
+  if(db.projects.length>before)createdProjects++;
+  projectByKey[def.key]=p;
+ });
+ seed.tasks.forEach(t=>{
+  const p=projectByKey[t.projectKey];if(!p)return;
+  const cat=canonicalCategory(t.category);
+  const existing=db.tasks.find(e=>{
+   if(e.projectId!==p.id||canonicalCategory(e.category)!==cat)return false;
+   const ew=String(e.wbs||'').trim(),tw=String(t.wbs||'').trim();
+   if(ew&&tw)return ew===tw;
+   return String(e.name||'').trim().toLowerCase()===String(t.name||'').trim().toLowerCase();
+  });
+  if(existing){
+   Object.keys(t).forEach(k=>{
+    if(k==='id'||k==='projectKey'||k==='projectId')return;
+    const v=t[k];if(v!==''&&v!==null&&v!==undefined)existing[k]=v;
+   });
+   existing.projectId=p.id;updated++;
+  }else{
+   db.tasks.push({...t,projectId:p.id});
+   added++;
+  }
+ });
+ seed.projects.forEach(def=>{
+  const p=projectByKey[def.key],ts=db.tasks.filter(t=>t.projectId===p.id);
+  if(ts.length)p.progress=Math.round(ts.reduce((sum,t)=>sum+(Number(t.completion)||0),0)/ts.length);
+ });
+ pendingOctoberTLSeed=null;
+ save();closeModal();renderProjects();renderTasks();renderOverview();
+ if(pid)renderDetail();
+ alert('10月以来TL同步完成：新增 '+added+' 条，更新 '+updated+' 条，新增项目 '+createdProjects+' 个。');
+}
 
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});renderProjects();renderTasks();renderOverview();
 </script></body></html>
