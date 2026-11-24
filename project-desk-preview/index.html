@@ -359,10 +359,11 @@ function applyOctoberTLSeed(){
   if(ts.length)p.progress=Math.round(ts.reduce((sum,t)=>sum+(Number(t.completion)||0),0)/ts.length);
  });
  pendingOctoberTLSeed=null;
+ try{localStorage.setItem('projectDeskOctoberTLSeedVersion',seed.version)}catch(e){}
  save();closeModal();renderProjects();renderTasks();renderOverview();
  if(pid)renderDetail();
  alert('10月以来TL同步完成：新增 '+added+' 条，更新 '+updated+' 条，新增项目 '+createdProjects+' 个。');
 }
 
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});renderProjects();renderTasks();renderOverview();
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});renderProjects();renderTasks();renderOverview();if(localStorage.getItem('projectDeskOctoberTLSeedVersion')!=='2026-11-24-oct-onward-v1')setTimeout(syncOctoberTL,500);
 </script></body></html>
