@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f8fb"><title>Project Desk 项目管理</title>
 <style>
 :root{--bg:#f5f6fa;--ink:#20263a;--muted:#778096;--line:#e5e8f0;--accent:#5c63e8;--soft:#eef0ff;--ok:#1c9b63}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 13px;background:#fff;color:var(--ink);box-shadow:0 0 0 1px var(--line) inset}.primary{background:var(--accent);color:white;box-shadow:none}.soft{background:var(--soft);color:var(--accent);box-shadow:none}.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:#f7f8f8ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.brand{font-weight:800}.brand small{display:block;font-size:11px;color:var(--muted);font-weight:500}.layout{display:grid;grid-template-columns:190px 1fr;min-height:calc(100vh - 58px)}aside{padding:16px 10px;border-right:1px solid var(--line);background:#fafbfc}.nav{display:grid;gap:6px}.nav button{text-align:left;background:transparent;box-shadow:none;color:#667085}.nav button.active{background:var(--soft);color:var(--accent);font-weight:700}main{padding:22px;min-width:0}.page{display:none}.page.active{display:block}.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}.heading h1{font-size:25px;margin:0}.heading p{margin:6px 0 0;color:var(--muted);font-size:13px}.filters,.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.chip,.tab{border-radius:999px;padding:8px 12px;background:white;color:#667085}.chip.on,.tab.on{background:#252b40;color:white;box-shadow:none}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}.card,.panel{background:white;border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 6px 24px #27365a0a}.card{cursor:pointer}.card h3{margin:12px 0}.tag{display:inline-block;font-size:11px;border-radius:99px;padding:5px 8px;background:#edf6ff;color:#2476a5}.tag.sales{background:#fff2df;color:#a96605}.tag.after{background:#eaf8ef;color:#25804b}.bar{height:6px;background:#eceef4;border-radius:99px;overflow:hidden;margin:12px 0}.bar i{display:block;height:100%;background:var(--accent)}.muted{color:var(--muted);font-size:12px}.panel{margin-bottom:14px}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.panelhead h2{font-size:17px;margin:0}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.tbl{width:100%;min-width:800px;border-collapse:collapse}.tbl th,.tbl td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:13px}.tbl th{background:#f8f9fb;color:#667085}.tbl tr{cursor:pointer}.mobilelist{display:none;gap:9px}.task{padding:13px;border:1px solid var(--line);border-radius:14px;background:white}.task b{display:block;margin-bottom:7px}.taskmeta{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:12px;color:var(--muted)}.kanban{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:10px;overflow:auto}.lane{background:#eff1f6;border-radius:14px;padding:10px;min-height:180px}.lane h4{margin:4px 4px 10px}.mini{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px;margin-bottom:8px;cursor:pointer;font-size:13px}.steps{display:grid;gap:9px}.step{display:grid;grid-template-columns:45px 1fr auto;gap:10px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:13px}.step.done{background:#effaf3;border-color:#d3efdd}.step strong{color:var(--accent)}.step small{display:block;color:var(--muted);margin-top:4px}.toggle{width:44px;height:26px;border-radius:99px;background:#dfe3eb;padding:3px}.toggle i{display:block;width:20px;height:20px;border-radius:50%;background:white;transition:.15s}.toggle.on{background:var(--ok)}.toggle.on i{transform:translateX(18px)}.wizard{max-width:640px;margin:auto}.wizcard{background:white;border:1px solid var(--line);border-radius:22px;padding:24px;min-height:410px;display:flex;flex-direction:column;box-shadow:0 8px 28px #27365a0b}.segments{display:flex;gap:5px;margin-bottom:25px}.segments i{height:5px;flex:1;border-radius:99px;background:#e9ebf2}.segments i.on{background:var(--accent)}.wizcard h2{font-size:24px;line-height:1.35;margin:9px 0 22px}.field{display:grid;gap:7px}.field input,.field textarea,.field select,.fieldrow input,.fieldrow select{width:100%;padding:13px;border:1px solid #dfe3eb;border-radius:12px;background:white}.field textarea{min-height:115px}.options{display:grid;grid-template-columns:1fr 1fr;gap:9px}.option{text-align:left;border:1px solid var(--line);border-radius:13px;padding:14px;background:white;box-shadow:none}.option.sel{border-color:var(--accent);background:var(--soft);color:var(--accent);font-weight:700}.wizfoot{margin-top:auto;padding-top:25px;display:flex;justify-content:space-between;gap:8px}.fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modal{display:none;position:fixed;inset:0;z-index:10;background:#12182b66;align-items:flex-end;justify-content:center}.modal.on{display:flex}.sheet{background:white;width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.formgrid label{display:grid;gap:6px;font-size:12px;color:#667085}.formgrid .full{grid-column:1/-1}.savebar{display:flex;justify-content:flex-end;gap:8px;padding:18px 0 4px;position:sticky;bottom:0;background:white}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kpis .panel{margin:0}.kpis b{font-size:24px;display:block}.kpis span{font-size:12px;color:var(--muted)}.fab{display:none}
-@media(max-width:760px){.top{padding:11px 13px}.layout{display:block}aside{position:fixed;bottom:0;left:0;right:0;z-index:8;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border:0;border-top:1px solid var(--line);background:#fffffff2}.nav{grid-template-columns:repeat(4,1fr);gap:3px}.nav button{text-align:center;font-size:11px;padding:9px 2px}.nav button:before{display:block;font-size:17px;margin-bottom:3px}.nav button[data-id=projects]:before{content:"▦"}.nav button[data-id=quick]:before{content:"✎"}.nav button[data-id=tasks]:before{content:"☷"}.nav button[data-id=overview]:before{content:"◷"}main{padding:16px 12px 88px}.heading{align-items:flex-start;flex-direction:column}.heading h1{font-size:23px}.cards{grid-template-columns:1fr}.tablewrap{display:none}.mobilelist{display:grid}.kanban{grid-template-columns:84vw 84vw 84vw 84vw 84vw}.options{grid-template-columns:1fr}.wizcard{padding:20px 15px;min-height:calc(100dvh - 150px)}.wizcard h2{font-size:22px}.formgrid,.fieldrow{grid-template-columns:1fr}.formgrid .full{grid-column:auto}.kpis{grid-template-columns:1fr 1fr}.step{grid-template-columns:40px 1fr auto;padding:11px}.desktop{display:none}.fab{display:block;position:fixed;right:16px;bottom:76px;width:54px;height:54px;border-radius:17px;background:var(--accent);color:white;font-size:26px;box-shadow:0 8px 25px #5c63e855;z-index:7}}
+@media(max-width:760px){.top{padding:11px 13px}.layout{display:block}aside{position:fixed;bottom:0;left:0;right:0;z-index:8;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border:0;border-top:1px solid var(--line);background:#fffffff2}.nav{grid-template-columns:repeat(5,1fr);gap:3px}.nav button{text-align:center;font-size:11px;padding:9px 2px}.nav button:before{display:block;font-size:17px;margin-bottom:3px}.nav button[data-id=projects]:before{content:"▦"}.nav button[data-id=people]:before{content:"◎"}.nav button[data-id=quick]:before{content:"✎"}.nav button[data-id=tasks]:before{content:"☷"}.nav button[data-id=overview]:before{content:"◷"}main{padding:16px 12px 88px}.heading{align-items:flex-start;flex-direction:column}.heading h1{font-size:23px}.cards{grid-template-columns:1fr}.tablewrap{display:none}.mobilelist{display:grid}.kanban{grid-template-columns:84vw 84vw 84vw 84vw 84vw}.options{grid-template-columns:1fr}.wizcard{padding:20px 15px;min-height:calc(100dvh - 150px)}.wizcard h2{font-size:22px}.formgrid,.fieldrow{grid-template-columns:1fr}.formgrid .full{grid-column:auto}.kpis{grid-template-columns:1fr 1fr}.step{grid-template-columns:40px 1fr auto;padding:11px}.desktop{display:none}.fab{display:block;position:fixed;right:16px;bottom:76px;width:54px;height:54px;border-radius:17px;background:var(--accent);color:white;font-size:26px;box-shadow:0 8px 25px #5c63e855;z-index:7}}
 
 /* Category and status colors for the R&D kanban and task table */
 .lane{border-top:4px solid var(--lane-accent,#64748b);background:#f7f8fc}
@@ -19,11 +19,54 @@
 
 .top-actions{display:flex;align-items:center;gap:8px}
 @media(max-width:760px){.top-actions{gap:6px}.top-actions button{padding:8px 9px;font-size:12px}}
+
+.owner-card .owner-avatar{width:42px;height:42px;border-radius:13px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:18px;margin-bottom:10px}
+.owner-project-card{cursor:pointer}
+.owner-project-card .owner-task-preview{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);display:grid;gap:5px}
+.owner-project-card .owner-task-preview span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gantt-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:12px 0 8px}
+.gantt-toolbar .chip{padding:7px 11px}
+.gantt-toolbar .zoom-readout{min-width:48px;text-align:center;color:var(--muted);font-size:12px}
+.gantt-meta{font-size:12px;color:var(--muted);margin:4px 0 10px}
+.gantt-scroll{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:12px;background:#fff}
+.gantt-canvas{min-width:max-content}
+.gantt-axis,.gantt-row{display:grid;grid-template-columns:72px 250px 110px var(--gantt-timeline-width);width:calc(432px + var(--gantt-timeline-width))}
+.gantt-axis{position:sticky;top:0;z-index:2;background:#f7f8fb;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;color:#536078}
+.gantt-axis>div:not(.gantt-axis-track){padding:12px 9px;border-right:1px solid var(--line);display:flex;align-items:center}
+.gantt-axis-track{height:54px;position:relative;overflow:hidden}
+.gantt-tick{position:absolute;top:0;bottom:0;border-left:1px solid #e2e6ef;padding:8px 0 0 5px;white-space:nowrap;color:#657089;font-size:11px;font-weight:600}
+.gantt-row{min-height:52px;border-bottom:1px solid var(--line);font-size:12px}
+.gantt-row:last-child{border-bottom:0}
+.gantt-cell{padding:8px 9px;border-right:1px solid #edf0f5;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.gantt-category{font-weight:750;color:var(--accent)}
+.gantt-task-name{font-size:12px;font-weight:700;line-height:1.35;white-space:normal}
+.gantt-task-dates{font-size:10px;color:var(--muted);margin-top:4px;white-space:normal;line-height:1.35}
+.gantt-owner{color:#5f6b82;overflow-wrap:anywhere}
+.gantt-track{position:relative;min-height:52px;background:#fff;overflow:hidden}
+.gantt-gridline{position:absolute;top:0;bottom:0;border-left:1px solid #f0f2f6;pointer-events:none}
+.gantt-today{position:absolute;top:0;bottom:0;border-left:2px solid #f08b7d;z-index:1;pointer-events:none}
+.gantt-bar{position:absolute;top:15px;height:22px;min-width:8px;border-radius:7px;opacity:.92;z-index:2;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#fff;padding:3px 7px;font-size:10px;font-weight:650;box-shadow:0 1px 3px #17203322}
+.gantt-bar:hover{opacity:1;filter:brightness(.96)}
+.gantt-unscheduled{margin-top:12px;padding:12px;border:1px dashed var(--line);border-radius:12px;background:#fafbfe}
+.gantt-unscheduled-list{display:grid;gap:6px;margin-top:8px}
+.gantt-unscheduled-item{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+.gantt-filters{display:flex;gap:9px;flex-wrap:wrap}
+.gantt-filters label{display:grid;gap:5px;font-size:11px;color:var(--muted);min-width:150px}
+.gantt-filters select{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+@media(max-width:760px){
+ .gantt-axis,.gantt-row{grid-template-columns:64px 210px 88px var(--gantt-timeline-width);width:calc(362px + var(--gantt-timeline-width))}
+ .gantt-cell{padding:7px}
+ .gantt-toolbar{gap:5px}
+ .gantt-toolbar button{padding:7px 9px;font-size:12px}
+ .gantt-filters label{flex:1;min-width:130px}
+}
 </style></head><body>
 <header class="top"><div class="brand">Project Desk<small>项目工作台 · 研发 / IPD / 售后</small></div><div class="top-actions"><button class="soft" onclick="syncOctoberTL()">同步10月以来TL</button><button class="primary" onclick="openWizard()">＋ 快速填报</button></div></header>
-<div class="layout"><aside><nav class="nav"><button data-id="projects" class="active" onclick="go('projects')">项目</button><button data-id="quick" onclick="go('quick');startWizard()">快速填报</button><button data-id="tasks" onclick="go('tasks')">多维表</button><button data-id="overview" onclick="go('overview')">总览</button></nav></aside>
+<div class="layout"><aside><nav class="nav"><button data-id="projects" class="active" onclick="go('projects')">项目</button><button data-id="people" onclick="go('people')">责任人</button><button data-id="quick" onclick="go('quick');startWizard()">快速填报</button><button data-id="tasks" onclick="go('tasks')">多维表</button><button data-id="overview" onclick="go('overview')">总览</button></nav></aside>
 <main>
 <section class="page active" id="projects"><div class="heading"><div><h1>项目总表</h1><p>先选项目，再进入任务。手机与电脑使用同一套页面。</p></div><button onclick="newProject()">＋ 新建项目</button></div><div id="pf" class="filters"></div><div id="projectCards" class="cards"></div></section>
+<section class="page" id="people"><div class="heading"><div><h1>责任人看板</h1><p>按责任人汇总跨项目任务，选择人员后查看其参与的项目。</p></div></div><div id="peopleHost" class="cards"></div></section>
+<section class="page" id="person"><div id="personHost"></div></section>
 <section class="page" id="detail"><div id="detailHost"></div></section>
 <section class="page" id="quick"><div class="heading"><div><h1>快速填报</h1><p>问卷式填写，一页一题；不确定的字段可以跳过。</p></div></div><div class="wizard" id="wizardHost"></div></section>
 <section class="page" id="tasks"><div class="heading"><div><h1>任务多维表</h1><p>所有项目统一任务数据，自动按项目和类别归类。</p></div><div><button onclick="exportCSV()">导出 WPS 表格</button> <button class="primary" onclick="openFeishuExport()">导出飞书数据</button></div></div><div id="tf" class="filters"></div><div id="taskHost"></div></section>
@@ -39,19 +82,63 @@ let db;try{db=JSON.parse(localStorage.getItem('projectDeskData'))||initial}catch
 function canonicalCategory(v){const x=String(v||'').trim();if(['系统','总','System'].includes(x))return '总';if(['BSW','下位机软件','底层软件'].includes(x))return 'BSW';if(['ASW','软件','应用软件','TL-Modeling','TL-同元'].includes(x))return 'ASW';return x}
 let _categoryMigrated=false;(db.tasks||[]).forEach(t=>{const c=canonicalCategory(t.category);if(c!==t.category){t.category=c;_categoryMigrated=true}});if(_categoryMigrated){try{localStorage.setItem('projectDeskData',JSON.stringify(db))}catch(e){}}
 let filter='全部',taskfilter='全部',pid=null,view='table',wiz={step:0,data:{}},pendingTLImport=null;
+let activePerson='',personContext=null,overviewMode='stats',globalGanttProject='全部',globalGanttOwner='全部';
+let ganttMode='week',ganttZoom=1,ganttFit=false,ganttTarget='project';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),attr=esc;
 function save(){localStorage.setItem('projectDeskData',JSON.stringify(db))}
-function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.id===id));if(id==='projects')renderProjects();if(id==='tasks')renderTasks();if(id==='overview')renderOverview()}
+function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.id===id));if(id==='projects')renderProjects();if(id==='people')renderPeople();if(id==='person')renderPersonProjects();if(id==='tasks')renderTasks();if(id==='overview')renderOverview()}
 function renderProjects(){let fs=['全部','研发','销售交付','售后'];$('#pf').innerHTML=fs.map(x=>'<button class="chip '+(x===filter?'on':'')+'" onclick="filter=\''+x+'\';renderProjects()">'+x+'</button>').join('');$('#projectCards').innerHTML=db.projects.filter(p=>filter==='全部'||p.type===filter).map(p=>'<article class="card" onclick="openProject(\''+p.id+'\')"><span class="tag '+(p.type==='销售交付'?'sales':p.type==='售后'?'after':'')+'">'+p.type+(p.ipd?' · IPD':'')+'</span><h3>'+esc(p.name)+'</h3><div class="bar"><i style="width:'+p.progress+'%"></i></div><div class="muted">'+db.tasks.filter(t=>t.projectId===p.id).length+' 项任务 <span style="float:right">'+p.progress+'%</span></div></article>').join('')}
 function newProject(){let name=prompt('项目名称？');if(!name)return;let type=prompt('项目类别：输入 研发、销售交付、售后','研发');if(!['研发','销售交付','售后'].includes(type)){alert('请输入：研发、销售交付或售后');return}let id='p'+Date.now();db.projects.push({id,name,type,progress:0,ipd:type==='销售交付'});if(type==='销售交付')db.ipd[id]={};save();renderProjects()}
 function newProjectFromWizard(){$('#sheet').innerHTML='<div class="panelhead"><h2>新建项目</h2><button onclick="closeModal()">取消</button></div><div class="formgrid"><label class="full">项目名称<input id="npName" placeholder="例如：3.3 kV DCDC 双脉冲平台"></label><label class="full">项目类型<select id="npType"><option value="研发">研发</option><option value="销售交付">销售交付</option><option value="售后">售后</option></select></label></div><p class="muted">创建后会自动加入项目总表，并继续填写该项目的任务。</p><div class="savebar"><button onclick="closeModal()">取消</button><button class="primary" onclick="saveWizardProject()">创建并继续</button></div>';$('#modal').classList.add('on');setTimeout(()=>$('#npName')?.focus(),0)}
 function saveWizardProject(){let name=$('#npName').value.trim(),type=$('#npType').value;if(!name){alert('请填写项目名称');return}let same=db.projects.find(p=>String(p.name||'').trim().toLowerCase()===name.toLowerCase());if(same&&!confirm('已存在同名项目“'+name+'”，仍然新建一个吗？'))return;let id='p'+Date.now();db.projects.push({id,name,type,progress:0,ipd:type==='销售交付'});if(type==='销售交付')db.ipd[id]={};save();renderProjects();wiz.data.projectId=id;wiz.data.category=type==='售后'?'售后':type==='销售交付'?'M3':'';wiz.data.m3Category='机械';wiz.step=1;closeModal();drawWizard()}
 
-function openProject(id){pid=id;view='table';go('detail');renderDetail()}
-function renderDetail(){let p=db.projects.find(x=>x.id===pid),ts=db.tasks.filter(t=>t.projectId===pid);if(!p)return;let head='<div class="heading"><div><button onclick="go(\'projects\')">← 项目</button><h1 style="margin-top:12px">'+esc(p.name)+'</h1><p>'+p.type+' · '+ts.length+' 项任务</p></div><div class="desktop"><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 新任务</button> '+(p.type==='研发'?'<button class="soft" onclick="enterIpd(\''+p.id+'\')">进入 IPD 流程</button>':'')+'</div></div>';
-let content='';if(p.type==='研发')content='<div class="panel"><div class="panelhead"><h2>研发 TL 看板</h2><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button onclick="selectTLFile(\''+p.id+'\')">导入 TL</button><button onclick="exportProjectFeishuXLSX(\''+p.id+'\')">导出飞书 Excel（保留公式）</button><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 任务</button></div></div><div class="tabs">'+[['table','多维表'],['kanban','看板'],['gantt','甘特图']].map(v=>'<button class="tab '+(view===v[0]?'on':'')+'" onclick="view=\''+v[0]+'\';renderDetail()">'+v[1]+'</button>').join('')+'</div>'+(view==='table'?table(ts):view==='kanban'?kanban(ts,cats):gantt(ts))+'</div>';
-else if(p.type==='销售交付')content=ipdView(p,ts);else content='<div class="panel"><div class="panelhead"><h2>售后任务</h2><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 任务</button></div>'+mobileList(ts)+'</div>';
-$('#detailHost').innerHTML=head+content}
+
+function taskOwners(t){return String(t.owner||'').split(/[、,，\/;；]/).map(x=>x.trim()).filter(Boolean)}
+function taskHasOwner(t,name){return taskOwners(t).some(x=>x===name)}
+function ownerNames(){return Array.from(new Set(db.tasks.flatMap(taskOwners))).sort((a,b)=>a.localeCompare(b,'zh-CN'))}
+function renderPeople(){
+ const names=ownerNames();
+ if(!names.length){$('#peopleHost').innerHTML='<div class="panel"><h2>还没有已分配的责任人</h2><p class="muted">在任务编辑或快速填报中填写责任人后，这里会自动生成对应入口。</p></div>';return}
+ $('#peopleHost').innerHTML=names.map(name=>{
+  const tasks=db.tasks.filter(t=>taskHasOwner(t,name)),projects=new Set(tasks.map(t=>t.projectId));
+  const active=tasks.filter(t=>t.status==='进行中').length,done=tasks.filter(t=>t.status==='已完成'||Number(t.completion)>=100).length;
+  const encoded=encodeURIComponent(name).replace(/'/g,'%27');
+  return '<article class="card owner-card" onclick="openPerson(\''+encoded+'\')"><div class="owner-avatar">'+esc(name.slice(0,1))+'</div><h3>'+esc(name)+'</h3><div class="bar"><i style="width:'+(tasks.length?Math.round(tasks.reduce((n,t)=>n+(Number(t.completion)||0),0)/tasks.length):0)+'%"></i></div><div class="muted">'+projects.size+' 个项目 · '+tasks.length+' 项任务</div><div class="muted" style="margin-top:7px">进行中 '+active+' · 已完成 '+done+'</div></article>';
+ }).join('');
+}
+function openPerson(encoded){activePerson=decodeURIComponent(encoded);personContext=null;go('person')}
+function renderPersonProjects(){
+ const name=activePerson;
+ if(!name){$('#personHost').innerHTML='<button onclick="go(\'people\')">← 责任人</button><p class="muted">请先选择责任人。</p>';return}
+ const projects=db.projects.map(p=>({project:p,tasks:db.tasks.filter(t=>t.projectId===p.id&&taskHasOwner(t,name))})).filter(x=>x.tasks.length);
+ const total=projects.reduce((n,x)=>n+x.tasks.length,0);
+ const cards=projects.map(x=>{
+  const p=x.project,ts=x.tasks,avg=Math.round(ts.reduce((n,t)=>n+(Number(t.completion)||0),0)/ts.length);
+  const preview=ts.slice(0,3).map(t=>'<span>· '+esc(t.name||'未命名任务')+'</span>').join('');
+  return '<article class="card owner-project-card" onclick="openPersonProject(\''+encodeURIComponent(name).replace(/'/g,'%27')+'\',\''+attr(p.id)+'\')"><span class="tag '+(p.type==='销售交付'?'sales':p.type==='售后'?'after':'')+'">'+esc(p.type)+(p.ipd?' · IPD':'')+'</span><h3>'+esc(p.name)+'</h3><div class="bar"><i style="width:'+avg+'%"></i></div><div class="muted">'+ts.length+' 项本人任务 <span style="float:right">'+avg+'%</span></div><div class="owner-task-preview">'+preview+(ts.length>3?'<span>还有 '+(ts.length-3)+' 项任务…</span>':'')+'</div></article>';
+ }).join('');
+ $('#personHost').innerHTML='<div class="heading"><div><button onclick="go(\'people\')">← 责任人</button><h1 style="margin-top:12px">'+esc(name)+'</h1><p>参与 '+projects.length+' 个项目 · 共 '+total+' 项任务</p></div></div>'+(cards?'<div class="cards">'+cards+'</div>':'<div class="panel"><p class="muted">这个责任人暂时没有分配任务。</p></div>');
+}
+function openPersonProject(encodedName,id){const name=decodeURIComponent(encodedName);activePerson=name;personContext={owner:name,projectId:id};pid=id;view='table';go('detail');renderDetail()}
+function backToPerson(){personContext=null;go('person')}
+
+
+function openProject(id){personContext=null;pid=id;view='table';go('detail');renderDetail()}
+function renderDetail(){
+ let p=db.projects.find(x=>x.id===pid),allTs=db.tasks.filter(t=>t.projectId===pid);
+ if(!p)return;
+ const scoped=!!(personContext&&personContext.projectId===pid);
+ let ts=scoped?allTs.filter(t=>taskHasOwner(t,personContext.owner)):allTs;
+ const back=scoped?'<button onclick="backToPerson()">← '+esc(personContext.owner)+'的项目</button>':'<button onclick="go(\'projects\')">← 项目</button>';
+ let head='<div class="heading"><div>'+back+'<h1 style="margin-top:12px">'+(scoped?esc(personContext.owner)+' · ':'')+esc(p.name)+'</h1><p>'+(scoped?'责任人视图 · ':'')+esc(p.type)+' · '+ts.length+' 项任务</p></div><div class="desktop"><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 新任务</button> '+(!scoped&&p.type==='研发'?'<button class="soft" onclick="enterIpd(\''+p.id+'\')">进入 IPD 流程</button>':'')+'</div></div>';
+ let content='';
+ if(scoped){
+  const personCats=Array.from(new Set(ts.map(t=>canonicalCategory(t.category)).filter(Boolean)));
+  content='<div class="panel"><div class="panelhead"><h2>'+esc(personContext.owner)+' · 项目任务看板</h2><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 新任务</button></div><div class="tabs">'+[['table','多维表'],['kanban','看板'],['gantt','甘特图']].map(v=>'<button class="tab '+(view===v[0]?'on':'')+'" onclick="view=\''+v[0]+'\';renderDetail()">'+v[1]+'</button>').join('')+'</div>'+(view==='table'?table(ts):view==='kanban'?kanban(ts,personCats.length?personCats:['未分类']):gantt(ts))+'</div>';
+ }else if(p.type==='研发')content='<div class="panel"><div class="panelhead"><h2>研发 TL 看板</h2><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button onclick="selectTLFile(\''+p.id+'\')">导入 TL</button><button onclick="exportProjectFeishuXLSX(\''+p.id+'\')">导出飞书 Excel（保留公式）</button><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 任务</button></div></div><div class="tabs">'+[['table','多维表'],['kanban','看板'],['gantt','甘特图']].map(v=>'<button class="tab '+(view===v[0]?'on':'')+'" onclick="view=\''+v[0]+'\';renderDetail()">'+v[1]+'</button>').join('')+'</div>'+(view==='table'?table(ts):view==='kanban'?kanban(ts,cats):gantt(ts))+'</div>';
+ else if(p.type==='销售交付')content=ipdView(p,ts);else content='<div class="panel"><div class="panelhead"><h2>售后任务</h2><button class="primary" onclick="openWizard(\''+p.id+'\')">＋ 任务</button></div>'+mobileList(ts)+'</div>';
+ $('#detailHost').innerHTML=head+content;
+}
 function statusTone(t){
  const raw=String(t.legacyStatus||t.status||'').trim(),st=String(t.status||'').trim(),pct=Number(t.completion)||0;
  if(/超期|overdue/i.test(raw)||st==='已逾期')return 'status-overdue';
@@ -66,12 +153,102 @@ function categoryColor(c){return ({'系统':'#4472c4','总':'#4472c4','机械':'
 function table(ts){let headers=['任务名称','大类','责任人','计划开始','计划结束','实际开始','实际结束','状态','进度'];let rows=ts.map(t=>'<tr onclick="editTask(\''+t.id+'\')"><td><b>'+esc(t.name)+'</b><div class="muted">'+esc(t.desc||'')+'</div></td><td>'+esc(t.category)+'</td><td>'+esc(t.owner||'')+'</td><td>'+ (t.planStart||'')+'</td><td>'+(t.planEnd||'')+'</td><td>'+(t.actualStart||'')+'</td><td>'+(t.actualEnd||'')+'</td><td>'+statusBadge(t)+'</td><td>'+(t.completion||0)+'%</td></tr>').join('');return '<div class="tablewrap"><table class="tbl"><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</thead><tbody>'+rows+'</tbody></table></div>'+mobileList(ts)}
 function mobileList(ts){return '<div class="mobilelist">'+ts.map(t=>'<div class="task" onclick="editTask(\''+t.id+'\')"><b>'+esc(t.name||'未命名任务')+'</b><div class="taskmeta"><span>'+esc(t.category||'')+'</span><span>'+esc(t.owner||'未分配')+'</span><span>'+(t.planStart||'未排期')+'</span>'+statusBadge(t)+'<span>'+(t.completion||0)+'%</span></div></div>').join('')+'</div>'}
 function kanban(ts,cs){return '<div class="kanban">'+cs.map(c=>'<div class="lane" style="--lane-accent:'+categoryColor(c)+'"><h4>'+c+' · '+ts.filter(t=>canonicalCategory(t.category)===canonicalCategory(c)).length+'</h4>'+ts.filter(t=>canonicalCategory(t.category)===canonicalCategory(c)).map(t=>'<div class="mini" onclick="editTask(\''+t.id+'\')"><b>'+esc(t.name)+'</b><div class="muted">'+esc(t.owner||'未分配')+' · '+(t.completion||0)+'%</div>'+statusBadge(t)+'</div>').join('')+'</div>').join('')+'</div>'}
-function gantt(ts){let a=ts.filter(t=>t.planStart&&t.planEnd);if(!a.length)return '<p class="muted">填入计划开始和结束日期后自动生成甘特图。</p>';let min=Math.min(...a.map(t=>+new Date(t.planStart))),max=Math.max(...a.map(t=>+new Date(t.planEnd))),span=Math.max(1,max-min);return '<div class="tablewrap"><div style="min-width:800px"><div style="padding:10px">'+new Date(min).toLocaleDateString()+' 至 '+new Date(max).toLocaleDateString()+'</div>'+a.map(t=>'<div style="display:grid;grid-template-columns:220px 1fr;align-items:center;border-top:1px solid var(--line);padding:8px"><span>'+esc(t.name)+'</span><div style="height:24px;position:relative;background:repeating-linear-gradient(to right,#f0f1f5 0,#f0f1f5 1px,transparent 1px,transparent 8.33%)"><i style="position:absolute;top:3px;height:18px;border-radius:6px;background:var(--accent);left:'+((+new Date(t.planStart)-min)/span*100)+'%;width:'+Math.max(1,(+new Date(t.planEnd)-+new Date(t.planStart))/span*100)+'%"></i></div></div>').join('')+'</div></div>'}
+
+function ganttDay(v){
+ const m=String(v||'').match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+ if(!m)return null;
+ return Math.floor(Date.UTC(+m[1],+m[2]-1,+m[3])/86400000);
+}
+function ganttDate(n){
+ const d=new Date(n*86400000),pad=x=>String(x).padStart(2,'0');
+ return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());
+}
+function ganttTicks(min,max,mode){
+ const out=[];
+ if(mode==='month'){
+  const d=new Date(min*86400000);let y=d.getUTCFullYear(),m=d.getUTCMonth();
+  if(Date.UTC(y,m,1)/86400000<min){m++;if(m>11){m=0;y++}}
+  for(let guard=0;guard<240;guard++){
+   const day=Math.floor(Date.UTC(y,m,1)/86400000);if(day>max)break;
+   out.push({day,label:y+'/'+String(m+1).padStart(2,'0')});
+   m++;if(m>11){m=0;y++}
+  }
+ }else{
+  const step=mode==='day'?1:7;
+  for(let day=min;day<=max;day+=step)out.push({day,label:ganttDate(day).slice(5)});
+ }
+ return out;
+}
+function gantt(ts,target='project'){
+ ganttTarget=target;
+ const scheduled=ts.map(t=>{
+  let start=ganttDay(t.planStart),end=ganttDay(t.planEnd);
+  if(start===null&&end===null)return null;
+  if(start===null)start=end;if(end===null)end=start;
+  if(end<start){const x=start;start=end;end=x}
+  return {task:t,start,end};
+ }).filter(Boolean);
+ const unscheduled=ts.filter(t=>!t.planStart&&!t.planEnd);
+ if(!scheduled.length)return '<div class="panel"><p class="muted">暂无已排期任务。填写计划开始或计划结束日期后，会自动生成甘特图。</p>'+(unscheduled.length?'<p class="muted">未排期任务：'+unscheduled.length+' 项</p>':'')+'</div>';
+ const min=Math.min(...scheduled.map(x=>x.start)),max=Math.max(...scheduled.map(x=>x.end)),days=Math.max(1,max-min+1);
+ const base={day:34,week:18,month:7}[ganttMode]||18;
+ let px=base*ganttZoom;
+ const leftWidth=window.innerWidth<=760?362:432;
+ if(ganttFit){
+  const mainWidth=document.querySelector('main')?.clientWidth||window.innerWidth||1200;
+  px=Math.max(4,Math.min(base,(mainWidth-leftWidth-48)/days));
+ }
+ const width=Math.max(560,Math.ceil(days*px));
+ const ticks=ganttTicks(min,max,ganttMode);
+ const axisTicks=ticks.map(x=>'<i class="gantt-tick" style="left:'+((x.day-min)*px)+'px">'+esc(x.label)+'</i>').join('');
+ const grid=ticks.map(x=>'<i class="gantt-gridline" style="left:'+((x.day-min)*px)+'px"></i>').join('');
+ const today=ganttDay(ganttDate(Math.floor(Date.now()/86400000)));
+ const todayX=today>=min&&today<=max?(today-min)*px:null;
+ const rows=scheduled.sort((a,b)=>a.start-b.start).map(x=>{
+  const t=x.task,barLeft=(x.start-min)*px,barWidth=Math.max(9,(x.end-x.start+1)*px-3);
+  const startLabel=t.planStart||'未设置',endLabel=t.planEnd||'未设置';
+  const fullDates=startLabel+' → '+endLabel;
+  const barText=barWidth>=190?fullDates:'';
+  const color=categoryColor(canonicalCategory(t.category));
+  const title=(t.name||'未命名任务')+'\n计划：'+fullDates+'\n负责人：'+(t.owner||'未分配')+'\n完成度：'+(Number(t.completion)||0)+'%';
+  return '<div class="gantt-row" style="--gantt-timeline-width:'+width+'px"><div class="gantt-cell gantt-category">'+esc(t.category||'未分类')+'</div><div class="gantt-cell"><div class="gantt-task-name">'+esc(t.name||'未命名任务')+'</div><div class="gantt-task-dates">'+esc(fullDates)+'</div></div><div class="gantt-cell gantt-owner">'+esc(t.owner||'未分配')+'</div><div class="gantt-track" style="width:'+width+'px">'+grid+(todayX===null?'':'<i class="gantt-today" style="left:'+todayX+'px"></i>')+'<div class="gantt-bar" title="'+attr(title)+'" onclick="editTask(\''+attr(t.id)+'\')" style="left:'+barLeft+'px;width:'+barWidth+'px;background:'+color+'">'+esc(barText)+'</div></div></div>';
+ }).join('');
+ const unscheduledHtml=unscheduled.length?'<div class="gantt-unscheduled"><b>未排期任务 · '+unscheduled.length+' 项</b><div class="gantt-unscheduled-list">'+unscheduled.map(t=>'<div class="gantt-unscheduled-item"><b>'+esc(t.category||'未分类')+'</b><span>'+esc(t.name||'未命名任务')+'</span><span>'+esc(t.owner||'未分配')+'</span><button onclick="editTask(\''+attr(t.id)+'\')">编辑</button></div>').join('')+'</div></div>':'';
+ const modeButton=(key,label)=>'<button class="chip '+(ganttMode===key?'on':'')+'" onclick="setGanttMode(\''+key+'\')">'+label+'</button>';
+ return '<div class="gantt-shell"><div class="gantt-toolbar"><span class="muted">时间尺度</span>'+modeButton('day','日')+modeButton('week','周')+modeButton('month','月')+'<span style="width:8px"></span><button onclick="zoomGantt(-1)">−</button><span class="zoom-readout">'+Math.round(ganttZoom*100)+'%</span><button onclick="zoomGantt(1)">＋</button><button class="soft" onclick="fitGantt()">适应全部</button></div><div class="gantt-meta">计划日期范围：'+ganttDate(min)+' 至 '+ganttDate(max)+' · '+scheduled.length+' 项已排期任务'+(unscheduled.length?' · '+unscheduled.length+' 项未排期':'')+'</div><div class="gantt-scroll"><div class="gantt-canvas"><div class="gantt-axis" style="--gantt-timeline-width:'+width+'px"><div>类别</div><div>任务描述 / 计划日期</div><div>负责人</div><div class="gantt-axis-track" style="width:'+width+'px">'+axisTicks+(todayX===null?'':'<i class="gantt-today" style="left:'+todayX+'px"></i>')+'</div></div>'+rows+'</div></div>'+unscheduledHtml+'</div>';
+}
+function setGanttMode(mode){ganttMode=mode;ganttZoom=1;ganttFit=false;refreshGantt()}
+function zoomGantt(direction){ganttFit=false;ganttZoom=Math.max(.5,Math.min(4,Math.round(ganttZoom*(direction>0?1.25:.8)*100)/100));refreshGantt()}
+function fitGantt(){ganttFit=true;refreshGantt()}
+function refreshGantt(){if(ganttTarget==='global')renderOverview();else renderDetail()}
+
 function ipdView(p,ts){let s=db.ipd[p.id]||{};return '<div class="panel"><div class="panelhead"><h2>IPD 销售交付流程</h2><span class="tag sales">M1 → M2 → M3 → M4 → Q3</span></div><div class="steps">'+steps.map(x=>{if(x.startsWith('M3'))return '<div class="step"><strong>M3</strong><div><b>产品全周期设计与开发策划</b><small>'+ts.filter(t=>t.category==='M3').length+' 项任务</small></div><button class="soft" onclick="document.getElementById(\'m3\').scrollIntoView({behavior:\'smooth\'})">展开</button></div>';let on=!!s[x];return '<div class="step '+(on?'done':'')+'"><strong>'+x.split('-')[0]+'</strong><div><b>'+x.split('-').slice(1).join('-')+'</b><small>'+(on?'已完成':'待完成')+'</small></div><button class="toggle '+(on?'on':'')+'" onclick="toggleStep(\''+p.id+'\',\''+x+'\')"><i></i></button></div>'}).join('')+'</div></div><div class="panel" id="m3"><div class="panelhead"><div><h2>M3 策划任务</h2><small class="muted">任务描述 · 类别 · 责任人 · 时间节点</small></div><button class="primary" onclick="openWizard(\''+p.id+'\',true)">＋ M3 任务</button></div>'+table(ts.filter(t=>t.category==='M3'))+'</div>'}
 function enterIpd(id){if(!confirm('将此项目切换到销售交付 / IPD 流程？原研发任务保留。'))return;let p=db.projects.find(x=>x.id===id);p.type='销售交付';p.ipd=true;db.ipd[id]={};save();renderProjects();renderDetail()}
 function toggleStep(id,s){db.ipd[id]=db.ipd[id]||{};db.ipd[id][s]=!db.ipd[id][s];save();renderDetail()}
 function renderTasks(){let fs=['全部','研发','销售交付','售后'];$('#tf').innerHTML=fs.map(x=>'<button class="chip '+(taskfilter===x?'on':'')+'" onclick="taskfilter=\''+x+'\';renderTasks()">'+x+'</button>').join('');let ps=Object.fromEntries(db.projects.map(p=>[p.id,p]));$('#taskHost').innerHTML=table(db.tasks.filter(t=>taskfilter==='全部'||ps[t.projectId]?.type===taskfilter))}
-function renderOverview(){let done=db.tasks.filter(t=>t.status==='已完成').length,active=db.tasks.filter(t=>t.status==='进行中').length,avg=db.tasks.length?Math.round(db.tasks.reduce((s,t)=>s+(+t.completion||0),0)/db.tasks.length):0;$('#overviewHost').innerHTML='<div class="kpis"><div class="panel"><b>'+db.projects.length+'</b><span>项目数</span></div><div class="panel"><b>'+db.tasks.length+'</b><span>任务数</span></div><div class="panel"><b>'+active+'</b><span>进行中</span></div><div class="panel"><b>'+avg+'%</b><span>平均完成度</span></div></div>'}
+
+function renderGlobalGantt(){
+ const projectOptions=['全部'].concat(db.projects.map(p=>p.id));
+ const ownerOptions=['全部','未分配'].concat(ownerNames());
+ if(!projectOptions.includes(globalGanttProject))globalGanttProject='全部';
+ if(!ownerOptions.includes(globalGanttOwner))globalGanttOwner='全部';
+ const pSelect='<label>项目<select onchange="setGlobalGanttProject(this.value)">'+projectOptions.map(id=>{
+  const p=db.projects.find(x=>x.id===id);const value=id==='全部'?'全部':id,label=id==='全部'?'全部项目':(p?.name||id);
+  return '<option value="'+attr(value)+'" '+(globalGanttProject===value?'selected':'')+'>'+esc(label)+'</option>';
+ }).join('')+'</select></label>';
+ const oSelect='<label>责任人<select onchange="setGlobalGanttOwner(this.value)">'+ownerOptions.map(name=>'<option value="'+attr(name)+'" '+(globalGanttOwner===name?'selected':'')+'>'+(name==='全部'?'全部责任人':name==='未分配'?'未分配':esc(name))+'</option>').join('')+'</select></label>';
+ let tasks=db.tasks.filter(t=>(globalGanttProject==='全部'||t.projectId===globalGanttProject)&&(globalGanttOwner==='全部'||(globalGanttOwner==='未分配'?!taskOwners(t).length:taskHasOwner(t,globalGanttOwner))));
+ return '<div class="panel"><div class="panelhead"><h2>跨项目总甘特图</h2><span class="muted">'+tasks.length+' 项任务</span></div><div class="gantt-filters">'+pSelect+oSelect+'</div></div>'+gantt(tasks,'global');
+}
+function setGlobalGanttProject(v){globalGanttProject=v;renderOverview()}
+function setGlobalGanttOwner(v){globalGanttOwner=v;renderOverview()}
+function renderOverview(){
+ const done=db.tasks.filter(t=>t.status==='已完成'||Number(t.completion)>=100).length,active=db.tasks.filter(t=>t.status==='进行中').length,avg=db.tasks.length?Math.round(db.tasks.reduce((s,t)=>s+(+t.completion||0),0)/db.tasks.length):0;
+ const tabs='<div class="tabs"><button class="tab '+(overviewMode==='stats'?'on':'')+'" onclick="overviewMode=\'stats\';renderOverview()">统计总览</button><button class="tab '+(overviewMode==='gantt'?'on':'')+'" onclick="overviewMode=\'gantt\';ganttTarget=\'global\';renderOverview()">总甘特图</button></div>';
+ const body=overviewMode==='gantt'?renderGlobalGantt():'<div class="kpis"><div class="panel"><b>'+db.projects.length+'</b><span>项目数</span></div><div class="panel"><b>'+db.tasks.length+'</b><span>任务数</span></div><div class="panel"><b>'+active+'</b><span>进行中</span></div><div class="panel"><b>'+avg+'%</b><span>平均完成度</span></div><div class="panel"><b>'+done+'</b><span>已完成</span></div><div class="panel"><b>'+ownerNames().length+'</b><span>责任人数</span></div></div>';
+ $('#overviewHost').innerHTML=tabs+body;
+}
+
 const qs=['project','category','name','desc','owner','dates','status'];function openWizard(id,m3=false){go('quick');startWizard(id,m3)}function startWizard(id,m3=false){wiz={step:id?1:0,data:{projectId:id||'',category:m3?'M3':''}};drawWizard()}function wset(k,v){wiz.data[k]=v;drawWizard()}function skip(){wiz.step++;if(wiz.step>=qs.length)submitWizard();else drawWizard()}function next(){wiz.step++;if(wiz.step>=qs.length)submitWizard();else drawWizard()}function prev(){if(wiz.step)wiz.step--;else{go('projects');return}drawWizard()}
 function drawWizard(){let d=wiz.data,q=qs[wiz.step],p=db.projects.find(x=>x.id===d.projectId),h='';if(q==='project')h='<div class="muted">第 1 题 · 选择项目</div><h2>这条任务属于哪个项目？</h2><div style="margin-bottom:12px"><button class="primary" onclick="newProjectFromWizard()">＋ 新建项目</button></div><div class="options">'+db.projects.map(x=>'<button class="option '+(d.projectId===x.id?'sel':'')+'" onclick="wset(\'projectId\',\''+x.id+'\');setTimeout(next,100)"><b>'+esc(x.name)+'</b><div class="muted">'+x.type+'</div></button>').join('')+'</div>';
 else if(q==='category'){let cs=p?.type==='研发'?cats:p?.type==='销售交付'?['M3']:['售后'];h='<div class="muted">任务归类</div><h2>'+(p?.type==='销售交付'?'该项目的执行任务归入 M3。':'选择任务大类')+'</h2><div class="options">'+cs.map(c=>'<button class="option '+(d.category===c?'sel':'')+'" onclick="wset(\'category\',\''+c+'\');'+(c==='M3'?'wiz.data.m3Category=wiz.data.m3Category||\'机械\';':'')+'setTimeout(next,100)">'+c+'</button>').join('')+'</div>';if(p?.type==='销售交付')h+='<div class="field" style="margin-top:12px">M3 类别<select onchange="wiz.data.m3Category=this.value"><option>机械</option><option>硬件</option><option>软件</option></select></div>'}
@@ -364,5 +541,5 @@ function applyOctoberTLSeed(){
  alert('10月以来TL同步完成：新增 '+added+' 条，更新 '+updated+' 条，新增项目 '+createdProjects+' 个。');
 }
 
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});renderProjects();renderTasks();renderOverview();if(localStorage.getItem('projectDeskOctoberTLSeedVersion')!=='2026-11-24-oct-onward-v1')setTimeout(syncOctoberTL,500);
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});renderProjects();renderPeople();renderTasks();renderOverview();if(localStorage.getItem('projectDeskOctoberTLSeedVersion')!=='2026-11-24-oct-onward-v1')setTimeout(syncOctoberTL,500);
 </script></body></html>
